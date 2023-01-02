@@ -13,6 +13,7 @@ const Home: NextPage = () => {
   // const data = trpc.test.test.useQuery({ msg: "Hehehe" });
 
   const addNote = trpc.notes.newNote.useMutation();
+  const { data: allNotes, isLoading } = trpc.notes.getAllNotes.useQuery();
 
   const [showForm, setShowForm] = useState(false);
   const [noteData, setNoteData] = useState({} as NoteDataProp);
@@ -29,6 +30,11 @@ const Home: NextPage = () => {
 
   const handleSubmit = () => {
     addNote.mutate(noteData);
+
+    setNoteData({
+      title: "",
+      description: "",
+    });
   };
 
   return (
@@ -51,7 +57,9 @@ const Home: NextPage = () => {
             New Note
           </button>
         </div>
-        {/*    Form    */}
+
+        {/*  New Note  Form    */}
+
         {showForm && (
           <div className="mx-auto flex w-11/12 flex-col gap-y-4  border-2 border-black bg-white/90 p-3 text-center text-white md:w-8/12 lg:w-5/12">
             <h1 className="my-2 text-2xl font-semibold text-black">New Note</h1>
@@ -67,7 +75,7 @@ const Home: NextPage = () => {
             <textarea
               value={noteData.description}
               onChange={(e) => handleDescChange(e)}
-              placeholder="Title"
+              placeholder="Description"
               className=" bg-violet-800 p-2 outline-0"
             />
             {/*   Add   */}
@@ -79,6 +87,32 @@ const Home: NextPage = () => {
             </button>
           </div>
         )}
+        {/*      End New Form            */}
+
+        {/*      Notes  */}
+        <div className="mx-auto mt-10 grid w-max grid-cols-3 gap-6">
+          {isLoading ? (
+            <div>
+              <h1 className="fomt-bold my-2 text-4xl text-white">
+                Loading....
+              </h1>
+            </div>
+          ) : (
+            allNotes?.map((data, i) => (
+              <Link href={`/notes/${data.id}`}>
+                <div
+                  className="flex flex-col gap-y-2 border-8 border-blue-700 bg-white px-6 py-3 shadow-xl transition-all hover:bg-blue-700"
+                  key={i}
+                >
+                  <h1 className=" text-2xl font-semibold text-purple-800">
+                    {data.title}
+                  </h1>
+                  {/* <p className="text-lg">{data.description}</p> */}
+                </div>
+              </Link>
+            ))
+          )}
+        </div>
       </main>
     </>
   );
