@@ -2,6 +2,7 @@ import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
 export const notesRouter = router({
+  //         get Single Unique Note
   getNoteById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input: { id } }) => {
@@ -12,6 +13,7 @@ export const notesRouter = router({
       });
     }),
 
+  //              get All Notes
   getAllNotes: publicProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.notes.findMany({
       orderBy: {
@@ -20,6 +22,7 @@ export const notesRouter = router({
     });
   }),
 
+  //              create new Note
   newNote: publicProcedure
     .input(
       z.object({
@@ -31,6 +34,25 @@ export const notesRouter = router({
       try {
         return await ctx.prisma.notes.create({
           data: { title, description },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }),
+
+  //              update note
+  updateNote: publicProcedure
+    .input(
+      z.object({ title: z.string(), description: z.string(), id: z.number() })
+    )
+    .mutation(async ({ ctx, input: { description, title, id } }) => {
+      try {
+        return await ctx.prisma.notes.update({
+          where: { id },
+          data: {
+            title,
+            description,
+          },
         });
       } catch (e) {
         console.log(e);

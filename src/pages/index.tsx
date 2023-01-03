@@ -13,8 +13,6 @@ interface NoteDataProp {
 }
 
 const Home: NextPage = () => {
-  // const data = trpc.test.test.useQuery({ msg: "Hehehe" });
-
   const addNote = trpc.notes.newNote.useMutation();
   const { data: allNotes, isLoading } = trpc.notes.getAllNotes.useQuery();
 
@@ -115,9 +113,11 @@ const Home: NextPage = () => {
                       <HiOutlineTrash />
                     </button>
 
-                    <button className="text-emerald-700">
-                      <BsPencilSquare />
-                    </button>
+                    <Link href={`/edit/${data.id}`}>
+                      <button className="text-emerald-700">
+                        <BsPencilSquare />
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </Link>
