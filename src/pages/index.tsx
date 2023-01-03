@@ -2,7 +2,10 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
+import Spinner from "../components/Spinner";
 import { trpc } from "../utils/trpc";
+import { HiOutlineTrash } from "react-icons/hi";
+import { BsPencilSquare } from "react-icons/bs";
 
 interface NoteDataProp {
   title: string;
@@ -93,21 +96,29 @@ const Home: NextPage = () => {
         <div className="mx-auto mt-10 grid w-max grid-cols-3 gap-6">
           {isLoading ? (
             <div>
-              <h1 className="fomt-bold my-2 text-4xl text-white">
-                Loading....
-              </h1>
+              <Spinner />
             </div>
           ) : (
             allNotes?.map((data, i) => (
               <Link href={`/notes/${data.id}`}>
                 <div
-                  className="flex flex-col gap-y-2 border-8 border-blue-700 bg-white px-6 py-3 shadow-xl transition-all hover:bg-blue-700"
+                  className="flex items-center justify-between gap-y-2 gap-x-2 border-8 border-blue-700 bg-white px-6 py-3 shadow-xl transition-all hover:bg-blue-700"
                   key={i}
                 >
+                  {/*   title   */}
                   <h1 className=" text-2xl font-semibold text-purple-800">
                     {data.title}
                   </h1>
-                  {/* <p className="text-lg">{data.description}</p> */}
+                  {/*   del and edit   */}
+                  <div className="flex flex-col gap-y-4 text-2xl">
+                    <button className="text-red-600 ">
+                      <HiOutlineTrash />
+                    </button>
+
+                    <button className="text-emerald-700">
+                      <BsPencilSquare />
+                    </button>
+                  </div>
                 </div>
               </Link>
             ))
