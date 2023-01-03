@@ -7,14 +7,27 @@ import { trpc } from "../utils/trpc";
 import { HiOutlineTrash } from "react-icons/hi";
 import { BsPencilSquare } from "react-icons/bs";
 
-interface NoteDataProp {
+export interface NoteDataProp {
   title: string;
   description: string;
 }
 
 const Home: NextPage = () => {
-  const addNote = trpc.notes.newNote.useMutation();
-  const { data: allNotes, isLoading } = trpc.notes.getAllNotes.useQuery();
+  const addNote = trpc.notes.newNote.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+  const {
+    data: allNotes,
+    isLoading,
+    refetch,
+  } = trpc.notes.getAllNotes.useQuery();
+  const deleteNote = trpc.notes.deleteNote.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
 
   const [showForm, setShowForm] = useState(false);
   const [noteData, setNoteData] = useState({} as NoteDataProp);
@@ -98,29 +111,30 @@ const Home: NextPage = () => {
             </div>
           ) : (
             allNotes?.map((data, i) => (
-              <Link href={`/notes/${data.id}`}>
-                <div
-                  className="flex items-center justify-between gap-y-2 gap-x-2 border-8 border-blue-700 bg-white px-6 py-3 shadow-xl transition-all hover:bg-blue-700"
-                  key={i}
-                >
-                  {/*   title   */}
+              <div
+                className="flex items-center justify-between gap-y-2 gap-x-8 border-8 border-blue-700 bg-white px-6 py-3 shadow-xl transition-all hover:bg-blue-700"
+                key={i}
+              >
+                {/*   title   */}
+                <Link href={`/notes/${data.id}`}>
                   <h1 className=" text-2xl font-semibold text-purple-800">
                     {data.title}
                   </h1>
-                  {/*   del and edit   */}
-                  <div className="flex flex-col gap-y-4 text-2xl">
-                    <button className="text-red-600 ">
-                      <HiOutlineTrash />
-                    </button>
+                </Link>
+                {/*   del and edit   */}
+                <div className="flex flex-col gap-y-4 text-2xl">
+                  <button
+                    className="text-red-600 "
+                    onClick={() => deleteNote.mutate({ id: data.id })}
+                  >
+                    <HiOutlineTrash />
+                  </button>
 
-                    <Link href={`/edit/${data.id}`}>
-                      <button className="text-emerald-700">
-                        <BsPencilSquare />
-                      </button>
-                    </Link>
-                  </div>
+                  <Link href={`/edit/${data.id}`} className="text-emerald-700">
+                    <BsPencilSquare />
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))
           )}
         </div>

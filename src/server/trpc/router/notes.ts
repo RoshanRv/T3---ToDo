@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { number, z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
 export const notesRouter = router({
@@ -52,6 +52,22 @@ export const notesRouter = router({
           data: {
             title,
             description,
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }),
+
+  //  delete Note
+
+  deleteNote: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input: { id } }) => {
+      try {
+        return await ctx.prisma.notes.delete({
+          where: {
+            id,
           },
         });
       } catch (e) {
