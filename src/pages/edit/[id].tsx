@@ -23,8 +23,6 @@ const editNote = () => {
     }
   );
 
-  console.log("hehe");
-
   const [editData, setEditData] = useState({
     title: "",
     description: "",
@@ -52,7 +50,7 @@ const editNote = () => {
   }, [note]);
 
   return (
-    <main className="flex min-h-screen w-full flex-col  bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+    <main className="flex min-h-screen w-full flex-col gap-y-10 bg-gradient-to-b from-[#2e026d] to-[#15162c] p-10">
       <Link href={"/"}>
         <h1 className="text-2xl text-white">Back</h1>
       </Link>
