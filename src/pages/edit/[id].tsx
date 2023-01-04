@@ -5,7 +5,7 @@ import { NoteDataProp } from "..";
 import Spinner from "../../components/Spinner";
 import { trpc } from "../../utils/trpc";
 
-const editNote = () => {
+const EditNote = () => {
   const { id } = useRouter().query;
 
   const editNoteData = trpc.notes.updateNote.useMutation();
@@ -98,4 +98,4 @@ const editNote = () => {
   );
 };
 
-export default editNote;
+export default EditNote;
