@@ -11,6 +11,7 @@ This is a Simple ToDo Webapp Created Using T3 Stack.
 - Tailwind CSS
 - tRPC
 - Typescript
+- React Query
 
 # Demo
 
